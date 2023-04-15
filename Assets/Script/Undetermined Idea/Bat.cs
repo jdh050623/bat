@@ -49,7 +49,5 @@ public class Bat : MonoBehaviour
         yield return new WaitForSeconds(.7f);
         Debug.Log("2c");
         swing = false;
-
-        
     }
 }

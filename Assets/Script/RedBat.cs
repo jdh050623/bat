@@ -5,41 +5,37 @@ using UnityEngine;
 public class RedBat : MonoBehaviour
 {
     private Vector3 point;
-    private float rotationZ;
+    private float rotationZ = 180;
     private bool swing;
     public GameObject swingEffect;
     public GameObject scr_HitZone;
-    // Start is called before the first frame update
-    void Start()
+
+    void Awake()
     {
-        rotationZ = 180f;
+
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && rotationZ >= 180 && !ButtonManager.dontClick)
         {
-            scr_HitZone.GetComponent<HitZone>().HitArea();
             point = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,0, 0));
             if (point.x > 0 && swing == false)
             {
-                //HitZone();
-
+                swingEffect.SetActive(true);
+                StartCoroutine(SwingDelay());
+                swing = true;
                 if (HitZone.ballColor == "redBall")
                 {
-                    Debug.Log("·¹µå´Ù");
+                    scr_HitZone.GetComponent<HitZone>().HitArea();
                 }
-
-                swingEffect.SetActive(true);
-                StartCoroutine(Co());
-                swing = true;
             }
         }
         if (swing == true)
         {
             if (rotationZ > 30)
             {
-                rotationZ -= 10;
+                rotationZ -= 2000 * Time.deltaTime;
             }
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotationZ));
         }
@@ -48,17 +44,22 @@ public class RedBat : MonoBehaviour
         {
             if (rotationZ < 180)
             {
-                rotationZ += 5;
+                rotationZ += 1000 * Time.deltaTime;
+            }
+            else
+            {
+                rotationZ = 180;
             }
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotationZ));
         }
     }
 
-    IEnumerator Co()
+    IEnumerator SwingDelay()
     {
         yield return new WaitForSeconds(.3f);
         swingEffect.SetActive(false);
         yield return new WaitForSeconds(.7f);
         swing = false;  
+        HitZone.hit = false;
     }
 }

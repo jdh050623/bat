@@ -1,20 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class HitZone : MonoBehaviour
 {
     public static int area; //공이 HitZone의 색깔 구역에 들어갈때마다 1씩 올라가고 색깔구역을 지나칠때마다 1씩 내려감 빨주노 순서로 3,2,1
-    public static string areaZone;
     public static string ballColor;
     public static bool hit;
-    // Start is called before the first frame update
+    private int score;
+    public static int topScore;
+    public static int currentScore;
+    public static bool recordBreaking;//최고기록 갱신중
+
+    public GameObject scoreText;
     void Start()
     {
-        
+        recordBreaking = false;
+        currentScore = 0;
+        if (!PlayerPrefs.HasKey("TOP_Score"))
+        {
+            PlayerPrefs.SetInt("TOP_Score", 0); 
+        }
+        else
+        {
+            topScore = PlayerPrefs.GetInt("TOP_Score");
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -22,12 +35,12 @@ public class HitZone : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Red")
+        if (collision.gameObject.tag == "Red")
         {
             ballColor = "redBall";
         }
 
-        if (collision.tag == "Blue")
+        if (collision.gameObject.tag == "Blue")
         {
             ballColor = "blueBall";
         }
@@ -39,26 +52,37 @@ public class HitZone : MonoBehaviour
         {
             if (area == 3)
             {
-                Debug.Log("빨강");
-                hit = true;
-                areaZone = "RZone";
+                score = 5;
+                HitAreaScore();
             }
 
             if (area == 2)
             {
-                Debug.Log("주황");
-                hit = true;
-                areaZone = "OZone";
+                score = 3;
+                HitAreaScore();
             }
 
             if (area == 1)
             {
-                Debug.Log("노랑");
-                hit = true;
-                areaZone = "YZone";
+                score = 1;
+                HitAreaScore();
             }
         }
-        
     }
 
+    public void HitAreaScore()
+    {
+        Ball.ballHit = true;
+        hit = true;
+        GameObject text = Instantiate(scoreText);
+        text.GetComponent<PlusScoreText>().score = "+"+score.ToString();
+
+        currentScore = currentScore + score;
+        if (topScore <= currentScore)
+        {
+            recordBreaking = true;
+            topScore = currentScore;
+            PlayerPrefs.SetInt("TOP_Score", topScore);
+        }
+    }
 }

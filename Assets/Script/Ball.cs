@@ -11,21 +11,19 @@ public class Ball : MonoBehaviour
     private bool m_IsStart;
     private bool Arrival;
 
+    public static bool ballHit; 
+    
     void Start()
     {
         m_StartPosition = transform.position;
         HitZone.area = 0;
-        HitZone.hit = false;
+        m_IsStart = true;
+        ballHit = false;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) // 출발
-        {
-            m_IsStart = true;
-        }
-
-        if (m_IsStart)
+        if (m_IsStart) // 시작할때 공이 포물선으로 날아감
         {
             float x0 = m_StartPosition.x;
             float x1 = m_Target.position.x;
@@ -38,7 +36,7 @@ public class Ball : MonoBehaviour
             transform.rotation = LookAt2D(nextPosition - transform.position);
             transform.position = nextPosition;
 
-            if (nextPosition == m_Target.position) //도착했음
+            if (nextPosition == m_Target.position) //빨간구역 도착함
             {
                 Arrival = true;
                 m_IsStart = false;
@@ -46,18 +44,22 @@ public class Ball : MonoBehaviour
 
             if (transform.localScale.x < 1f)
             {
-                transform.localScale = new Vector2(transform.localScale.x + 0.01f, transform.localScale.y + 0.01f);
+                transform.localScale = new Vector2(transform.localScale.x + 3f * Time.deltaTime, transform.localScale.y + 3f * Time.deltaTime);
             }
         }
 
-        if (Arrival)
+        if (Arrival) //빨강구역 지남
         {
-            Debug.Log("도착");
-            transform.position = new Vector2(0, transform.position.y - 0.08f);
+            if (!ballHit)
+            {
+                transform.position = new Vector2(0, transform.position.y - 20f * Time.deltaTime);
+            }
+            else
+            {
+                transform.position = new Vector2(0, transform.position.y + 20f * Time.deltaTime);
+            }
             StartCoroutine(Destroy());
         }
-
-        //
     }
 
     Quaternion LookAt2D(Vector2 forward)
@@ -67,9 +69,13 @@ public class Ball : MonoBehaviour
 
     IEnumerator Destroy()
     {
-        yield return new WaitForSeconds(5f);
-        Debug.Log("삭제");
-        HitZone.area = 0;
+        yield return new WaitForSeconds(1.5f);
+        BallCreateManager.ballExistence = false;
+        if (!ballHit)
+        {
+            HeartManager.heartCount--;
+            Debug.Log("아잇");
+        }
         Destroy(gameObject);
     }
 
@@ -78,19 +84,16 @@ public class Ball : MonoBehaviour
         if(collision.tag == "YellowZone")
         {
             HitZone.area++;
-            Debug.Log(HitZone.area);
         }
 
         if (collision.tag == "OrangeZone")
         {
             HitZone.area++;
-            Debug.Log(HitZone.area);
         }
 
         if (collision.tag == "RedZone")
         {
             HitZone.area++;
-            Debug.Log(HitZone.area);
         }
     }
 
@@ -99,19 +102,16 @@ public class Ball : MonoBehaviour
         if (collision.tag == "YellowZone")
         {
             HitZone.area--;
-            Debug.Log(HitZone.area);
         }
 
         if (collision.tag == "OrangeZone")
         {
             HitZone.area--;
-            Debug.Log(HitZone.area);
         }
 
         if (collision.tag == "RedZone")
         {
             HitZone.area--;
-            Debug.Log(HitZone.area);
         } 
     }
 }
