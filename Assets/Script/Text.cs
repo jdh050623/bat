@@ -10,6 +10,11 @@ public class Text : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            PlayerPrefs.SetInt("TOP_Score", 0);
+        }
+
         t_currentScore.text = HitZone.currentScore.ToString();
         if(HitZone.recordBreaking == true)
         {
