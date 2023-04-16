@@ -10,9 +10,11 @@ public class Ball : MonoBehaviour
     private Vector3 m_StartPosition;
     private bool m_IsStart;
     private bool Arrival;
+    private bool onlyOnce;
 
-    public static bool ballHit; 
-    
+    public static bool ballHit;
+    public AudioSource s_NoHit;
+
     void Start()
     {
         m_StartPosition = transform.position;
@@ -58,7 +60,11 @@ public class Ball : MonoBehaviour
             {
                 transform.position = new Vector2(0, transform.position.y + 20f * Time.deltaTime);
             }
-            StartCoroutine(Destroy());
+            if (!onlyOnce)
+            {
+                onlyOnce = true;
+                StartCoroutine(Destroy());
+            }
         }
     }
 
@@ -69,13 +75,15 @@ public class Ball : MonoBehaviour
 
     IEnumerator Destroy()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         BallCreateManager.ballExistence = false;
         if (!ballHit)
         {
+            s_NoHit.Play();
             HeartManager.heartCount--;
-            Debug.Log("æ∆¿’");
+            Debug.Log("heartCount");
         }
+        yield return new WaitForSeconds(1.1f);
         Destroy(gameObject);
     }
 

@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class ButtonManager : MonoBehaviour
 {
     public static bool dontClick;
-
+    public AudioSource s_button;
     void Awake()
     {
         dontClick = false;
@@ -20,7 +20,14 @@ public class ButtonManager : MonoBehaviour
 
     public void ReBt()
     {
+        s_button.Play();
         Time.timeScale = 1;
+        StartCoroutine(SoundEndWait());
+    }
+
+    IEnumerator SoundEndWait()
+    {
+        yield return new WaitForSeconds(.3f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

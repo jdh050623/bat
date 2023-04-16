@@ -14,6 +14,7 @@ public class HitZone : MonoBehaviour
     public static bool recordBreaking;//최고기록 갱신중
 
     public GameObject scoreText;
+    public AudioSource[] ballHit; 
     void Start()
     {
         recordBreaking = false;
@@ -53,17 +54,21 @@ public class HitZone : MonoBehaviour
             if (area == 3)
             {
                 score = 5;
+                ballHit[0].Play();
                 HitAreaScore();
             }
 
             if (area == 2)
             {
                 score = 3;
+
+                ballHit[1].Play();
                 HitAreaScore();
             }
 
             if (area == 1)
             {
+                ballHit[2].Play();
                 score = 1;
                 HitAreaScore();
             }

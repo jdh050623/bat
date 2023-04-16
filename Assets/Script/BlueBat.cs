@@ -58,8 +58,8 @@ public class BlueBat : MonoBehaviour
     {
         yield return new WaitForSeconds(.3f);
         swingEffect.SetActive(false);
+        HitZone.hit = false;
         yield return new WaitForSeconds(.7f);
         swing = false;
-        HitZone.hit = false;
     }
 }

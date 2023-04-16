@@ -10,8 +10,9 @@ public class HeartManager : MonoBehaviour
 
     public Image[] heart;
     public GameObject reGame;
+    public AudioSource s_Heal;
 
-    void Start()
+    void Awake()
     {
         heartCount = 3;
         healNum = healRequiredScore;
@@ -39,21 +40,22 @@ public class HeartManager : MonoBehaviour
         {
             heart[2].color = new Color32(255, 255, 255, 255);
         }
-        if (heartCount == 2)
+        else if (heartCount == 2)
         {
             heart[1].color = new Color32(255, 255, 255, 255);
             heart[2].color = new Color32(55, 55, 55, 255);
         }
-        if (heartCount == 1)
+        else if (heartCount == 1)
         {
             heart[0].color = new Color32(255, 255, 255, 255);
             heart[1].color = new Color32(55, 55, 55, 255);
         }
-        if (heartCount <= 0)
+        else if (heartCount == 0)
         {
             heart[0].color = new Color32(55, 55, 55, 255);
             reGame.SetActive(true);
             ButtonManager.dontClick = true;
+            heartCount = -1;
             Time.timeScale = 0;
         }
 
@@ -61,6 +63,7 @@ public class HeartManager : MonoBehaviour
         {
             healNum = healNum + healRequiredScore;
             heartCount++;
+            s_Heal.Play();
             Debug.Log("치유합니다");
         }
     }
