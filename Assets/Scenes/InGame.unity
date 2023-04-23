@@ -2097,7 +2097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d1c82d6e7c4cde44a214b2c2eb16859, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healRequiredScore: 50
+  healRequiredScore: 5
   heart:
   - {fileID: 1882285370}
   - {fileID: 660883291}

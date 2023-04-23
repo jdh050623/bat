@@ -59,11 +59,14 @@ public class HeartManager : MonoBehaviour
             Time.timeScale = 0;
         }
 
-        if(HitZone.currentScore >= healNum && heartCount <= 2)
+        if (HitZone.currentScore >= healNum)
         {
             healNum = healNum + healRequiredScore;
-            heartCount++;
-            s_Heal.Play();
+            if (heartCount < 3)
+            {
+                heartCount++;
+                s_Heal.Play();
+            }
             Debug.Log("치유합니다");
         }
     }
